@@ -246,7 +246,7 @@ read_all_makefiles (const char **makefiles)
         { "GNUmakefile", "Makefile", "SMakefile", 0 };
 #else /* !Amiga && !VMS */
 #ifdef WINDOWS32
-        { "GNUmakefile", "makefile", "Makefile", "makefile.mak", 0 };
+        { "Makefile.w32", "makefile", "Makefile", "makefile.mak", 0 };
 #else /* !Amiga && !VMS && !WINDOWS32 */
         { "GNUmakefile", "makefile", "Makefile", 0 };
 #endif /* !Amiga && !VMS && !WINDOWS32 */
