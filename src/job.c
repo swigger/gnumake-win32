@@ -3653,7 +3653,7 @@ construct_command_argv_internal (char *line, char **restp, const char *shell,
    variable expansion for $(SHELL) and $(IFS).  */
 
 char **
-construct_command_argv (char *line, char **restp, struct file *file,
+construct_command_argv1 (char *line, char **restp, struct file *file,
                         int cmd_flags, char **batch_filename)
 {
   char *shell, *ifs, *shellflags;

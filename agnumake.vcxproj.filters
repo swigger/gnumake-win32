@@ -135,5 +135,6 @@
     <ClCompile Include="src\w32\w32os.c">
       <Filter>src\w32</Filter>
     </ClCompile>
+    <ClCompile Include="win32hack.cpp" />
   </ItemGroup>
 </Project>

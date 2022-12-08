@@ -2025,7 +2025,7 @@ record_files (struct nameseq *filenames, int are_also_makes,
               size_t commands_idx, int two_colon,
               char prefix, const floc *flocp)
 {
-  struct commands *cmds;
+  struct commands *cmds = 0;
   struct dep *deps;
   struct dep *also_make = NULL;
   const char *implicit_percent;

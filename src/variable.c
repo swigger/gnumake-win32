@@ -1778,7 +1778,7 @@ print_variable (const void *item, void *arg)
 {
   const struct variable *v = item;
   const char *prefix = arg;
-  const char *origin;
+  const char *origin = 0;
 
   switch (v->origin)
     {
