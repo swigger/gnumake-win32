@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="lib">
+      <UniqueIdentifier>{10EB3AB8-39D8-432F-A7DC-39A96A41AFD4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{499636EB-A1E5-4ED8-A8DB-8DF1BAF84A7A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\w32">
+      <UniqueIdentifier>{7623BC33-4C1F-4B60-B24E-84E5984B8DAA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\w32\compat">
+      <UniqueIdentifier>{E14A4A99-1CA5-432A-A694-AA8179FC76CF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\w32\subproc">
+      <UniqueIdentifier>{9BB0218A-7A13-4409-8FB7-263F12B398EF}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lib\fnmatch.c">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\getloadavg.c">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\glob.c">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ar.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\arscan.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\commands.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\default.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dir.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\expand.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\file.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\function.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\getopt.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\getopt1.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\guile.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hash.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\implicit.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\job.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\load.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\loadapi.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\misc.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\output.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\read.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\remake.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\remote-stub.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rule.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shuffle.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\signame.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\strcache.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\variable.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\version.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vpath.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w32\compat\dirent.c">
+      <Filter>src\w32\compat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w32\compat\posixfcn.c">
+      <Filter>src\w32\compat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w32\pathstuff.c">
+      <Filter>src\w32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w32\subproc\misc1.c">
+      <Filter>src\w32\subproc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w32\subproc\sub_proc.c">
+      <Filter>src\w32\subproc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w32\subproc\w32err.c">
+      <Filter>src\w32\subproc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\w32\w32os.c">
+      <Filter>src\w32</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

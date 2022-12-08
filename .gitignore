@@ -1,0 +1,8 @@
+.vs/
+*.sbr
+obj/
+WinDebug/
+WinRel/
+x64/
+tests/config-flags.pm
+
