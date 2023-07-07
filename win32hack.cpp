@@ -11,7 +11,6 @@ extern "C" {
 using std::vector;
 using std::string;
 
-
 struct arg_t {
 	bool hasval;
 	std::string val;
@@ -29,45 +28,45 @@ static void commit(std::vector<std::string>& args, arg_t & cur)
 	cur.reset();
 }
 
-static string encode_ps_string(const string& s)
-{
-	size_t pos1 = s.find('"');
-	size_t pos2 = s.find('`');
-	size_t pos3 = s.find_first_of(" \t\r\n");
-	if (pos1 == string::npos && pos2 == string::npos && pos3 == string::npos)
-		return s;
-	string rs;
-	rs.reserve(s.size()+10);
-	rs += '"';
-	for (auto ch : s)
+static bool find_exe(const std::string& arg0, struct file* file) {
+	// may be powershell command.
+	auto env = target_environment(file, 0);
+	char* path = nullptr;
+	for (int i = 0; env && env[i]; ++i)
 	{
-		if (ch == '`' || ch == '"' || isspace(ch))
-			rs += '`';
-		rs += ch;
+		if (strnicmp(env[i], "path=", 5) == 0)
+		{
+			path = env[i] + 5;
+			break;
+		}
 	}
-	rs += '"';
-	return rs;
+	char* ps = path;
+	char* p = ps;
+	char* pe = path + strlen(path);
+	std::string tmp_fn;
+	bool found_file = false;
+	for (; p < pe; ++p)
+	{
+		if (*p == ';')
+		{
+			if (p > ps)
+			{
+				tmp_fn.assign(ps, p);
+				if (tmp_fn.back() != '/' && tmp_fn.back() != '\\')
+					tmp_fn += '\\';
+				tmp_fn += arg0;
+				DWORD attr = GetFileAttributesA(tmp_fn.c_str());
+				if (attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY) == 0)
+				{
+					found_file = true;
+					break;
+				}
+			}
+			ps = p + 1;
+		}
+	}
+	return found_file;
 }
-
-static bool cmd_in(const char* cmd, const char** cmds)
-{
-	const char* e = cmd + strlen(cmd);
-	if (e >= cmd + 4 && stricmp(e - 4, ".exe") == 0)
-		e -= 4;
-	string cmd1(cmd, e);
-	for (auto& ch : cmd1)
-	{
-		if (ch >= 'A' && ch <= 'Z')
-			ch |= 0x20;
-	}
-	for (int i = 0; cmds[i]; ++i)
-	{
-		if (strcmp(cmds[i], cmd1.c_str()) == 0)
-			return true;
-	}
-	return false;
-}
-
 
 extern "C" char**
 construct_command_argv(char* line, char** restp, struct file* file, int cmd_flags, char** batch_filename)
@@ -151,10 +150,20 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 		return ar;
 	}
 
+	bool is_complex = false;
+	for (auto& s : args) {
+		if (s == "|" || s == "&" || s == "&&" || s == "||" || s == "<" || s == ">" || s == ">>" ||
+			s == ";" || s == "{" || s == "}")
+		{
+			is_complex = true;
+			break;
+		}
+	}
+
 	static const char* sh_cmds_dos[] =
 	{ "assoc", "break", "call", "cd", "chcp", "chdir", "cls", "color", "copy",
 	  "ctty", "date", "del", "dir", "echo", "echo.", "endlocal", "erase",
-	  "exit", "for", "ftype", "goto", "if", "if", "md", "mkdir", "mklink", "move",
+	  "exit", "for", "ftype", "goto", "if", "md", "mkdir", "mklink", "move",
 	  "path", "pause", "prompt", "rd", "rem", "ren", "rename", "rmdir",
 	  "set", "setlocal", "shift", "time", "title", "type", "ver", "verify",
 	  "vol", ":", 0 };
@@ -164,66 +173,26 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 		});
 	if (*ptr && args[0] == *ptr)
 	{
-		args.insert(args.begin(), "/c");
-		args.insert(args.begin(), "cmd");
+		args.clear();
+		args.push_back("cmd");
+		args.push_back("/c");
+		args.push_back(line);
+	}
+	else if (!is_complex && find_exe(args[0], file))
+	{
+		; // use args as is.
 	}
 	else
 	{
-		// may be powershell command.
-		auto env = target_environment(file, 0);
-		char* path = nullptr;
-		for (int i = 0; env && env[i]; ++i)
-		{
-			if (strnicmp(env[i], "path=", 5) == 0)
-			{
-				path = env[i] + 5;
-				break;
-			}
-		}
-		char* ps = path;
-		char* p = ps;
-		char* pe = path + strlen(path);
-		std::string tmp_fn;
-		bool found_file = false;
-		for (; p < pe; ++p)
-		{
-			if (*p == ';')
-			{
-				if (p > ps)
-				{
-					tmp_fn.assign(ps, p);
-					if (tmp_fn.back() != '/' && tmp_fn.back() != '\\')
-						tmp_fn += '\\';
-					tmp_fn += args[0];
-					DWORD attr = GetFileAttributesA(tmp_fn.c_str());
-					if (attr != INVALID_FILE_ATTRIBUTES && (attr & FILE_ATTRIBUTE_DIRECTORY) == 0)
-					{
-						found_file = true;
-						break;
-					}
-				}
-				ps = p + 1;
-			}
-		}
-
-		static const char* known_cmds[] = {"cmd", "powershell", "sh", "cl", "link", "lib", 0};
-		if (!found_file && ! cmd_in(args[0].c_str(), known_cmds))
-		{
-			// treat all content as powershell commands.
-			vector<string> newargs;
-			newargs.reserve(3);
-			newargs.push_back("powershell");
-			newargs.push_back("-Command");
-			string q;
-			for (auto& s : args)
-			{
-				q += encode_ps_string(s);
-				q += " ";
-			}
-			if (!q.empty()) q.resize(q.size() - 1);
-			newargs.emplace_back(std::move(q));
-			newargs.swap(args);
-		}
+		// assume powershell.
+		args.clear();
+		args.push_back("powershell");
+		args.push_back("-Command");
+		auto p1 = line;
+		while (*p1 && isspace(*p1)) ++p1;
+		if (*p1 == ';') ++p1;
+		while (*p1 && isspace(*p1)) ++p1;
+		args.push_back(p1);
 	}
 
 	// collect args.
