@@ -186,7 +186,7 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 	{
 		// assume powershell.
 		args.clear();
-		args.push_back("powershell");
+		args.push_back("pwsh");
 		args.push_back("-Command");
 		auto p1 = line;
 		while (*p1 && isspace(*p1)) ++p1;

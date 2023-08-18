@@ -1,5 +1,6 @@
 .vs/
 *.sbr
+*.user
 obj/
 WinDebug/
 WinRel/
