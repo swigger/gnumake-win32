@@ -80,7 +80,7 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 		if (!in_quote && ch == '\n' && restp)
 		{
 			if (line[i+1])
-				*restp = line + i + 1;
+				*restp = line + i;
 			break;
 		}
 		if (!in_quote && ch > 0 && isspace(ch))
@@ -186,6 +186,7 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 	{
 		// assume powershell.
 		args.clear();
+		if (restp) *restp = 0;
 		args.push_back("pwsh");
 		args.push_back("-Command");
 		auto p1 = line;
