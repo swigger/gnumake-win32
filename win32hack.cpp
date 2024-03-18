@@ -73,6 +73,7 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 {
 	std::vector<std::string> args;
 	arg_t cur;
+	string allcmd;
 	bool in_quote = false;
 	for (int i = 0; line[i]; ++i)
 	{
@@ -86,6 +87,7 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 		if (!in_quote && ch > 0 && isspace(ch))
 		{
 			commit(args, cur);
+			allcmd += ch;
 			continue;
 		}
 
@@ -93,6 +95,7 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 		{
 			cur.hasval = 1;
 			in_quote = !in_quote;
+			allcmd += ch;
 		}
 		else if (ch == '\\')
 		{
@@ -101,6 +104,11 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 			//  如果遇到了\，就一直看是不是"跟着，否则原样处理
 			bool is_tr = false;
 			int j = i + 1;
+			// add special case for '\\', '\n', ANYTHING, gnumake's multi-line mode.
+			if (line[j] == '\n' && !in_quote && line[j + 1] != 0) {
+				++i;
+				continue;
+			}
 			for (; line[j]; ++j)
 			{
 				if (line[j] == '\\');
@@ -131,12 +139,14 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 				for (j = i; line[j] == '\\'; ++j)
 					cur.val += line[j];
 			}
+			allcmd.append(line + i, j - i);
 			i = j - 1; //note: ++i in for loop!
 		}
 		else
 		{
 			// in_quote or normal chars.
-			cur.val += ch;;
+			cur.val += ch;
+			allcmd += ch;
 		}
 	}
 	commit(args, cur);
@@ -189,7 +199,7 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 		if (restp) *restp = 0;
 		args.push_back("pwsh");
 		args.push_back("-Command");
-		auto p1 = line;
+		auto p1 = allcmd.c_str();
 		while (*p1 && isspace(*p1)) ++p1;
 		if (*p1 == ';') ++p1;
 		while (*p1 && isspace(*p1)) ++p1;
