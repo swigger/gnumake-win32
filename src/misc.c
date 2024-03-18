@@ -734,7 +734,6 @@ get_tmpfile (char **name)
 #else
   /* Preserve the current umask, and set a restrictive one for temp files.  */
   mode_t mask = umask (0077);
-  int err;
 
   *name = get_tmppath ();
 

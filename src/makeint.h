@@ -726,7 +726,7 @@ char *stpcpy (char *dest, const char *src);
 #define OUTPUT_SYNC_RECURSE 3
 
 /* Non-GNU systems may not declare this in unistd.h.  */
-extern char **environ;
+//extern char **environ;
 
 extern const floc *reading_file;
 extern const floc **expanding_var;

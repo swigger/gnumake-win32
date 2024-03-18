@@ -1,12 +1,14 @@
-﻿#include <Windows.h>
-
-extern "C" {
-	char** target_environment(struct file* file, int recursive);
-}
-
+﻿#include <stdlib.h>
+#include <string.h>
 #include <string>
 #include <vector>
 #include <algorithm>
+extern "C" {
+#define export export1  // export is a keyword in C++
+#include "makeint.h"
+#include "variable.h"
+}
+#include <Windows.h>
 
 using std::vector;
 using std::string;
@@ -224,4 +226,55 @@ construct_command_argv(char* line, char** restp, struct file* file, int cmd_flag
 		}
 	}
 	return ar;
+}
+
+#define extc extern "C"
+char* comma_list(const char* nm, unsigned int argc, char** argv)
+{
+	// return malloc-ed memory.
+	string ret;
+	vector<string> toks;
+	const char* ins = argv[0];
+	if (ins && *ins) {
+		const char* p = ins;
+		const char* pe = ins + strlen(ins);
+		enum state_t { NORMAL, IN_QUOTE } state = NORMAL;
+		for (; p < pe; ++p) {
+			if (state == NORMAL) {
+				if (isspace((uint8_t) *p)) {
+					if (p > ins) toks.push_back(string(ins, p));
+					ins = p + 1;
+				}
+				else if (*p == '"') {
+					state = IN_QUOTE;
+				}
+			}
+			else if (state == IN_QUOTE) {
+				if (*p == '\\') {
+					if (p[1] == 0) break;
+					else ++p;
+				}
+				else if (*p == '"') {
+					state = NORMAL;
+					toks.push_back(string(ins, p));
+					ins = p + 1;
+				}
+			}
+		}
+		if (ins < pe) toks.push_back(string(ins, pe));
+	}
+	if (!toks.empty()) {
+		ret = toks[0];
+		for (size_t i = 1; i < toks.size(); ++i) {
+			ret += ", ";
+			ret += toks[i];
+		}
+	}
+	char* rr = (char*) xmalloc(ret.length() + 1);
+	memcpy(rr, ret.c_str(), ret.length() + 1);
+	return rr;
+}
+
+extc void add_ex_funcs(void) {
+	define_new_function(0, "comma_list", 1, 1, 0, comma_list);
 }

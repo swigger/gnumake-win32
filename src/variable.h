@@ -178,6 +178,7 @@ struct variable *try_variable_definition (const floc *flocp, const char *line,
                                           int target_var);
 void init_hash_global_variable_set (void);
 void hash_init_function_table (void);
+void add_ex_funcs(void);
 void define_new_function(const floc *flocp, const char *name,
                          unsigned int min, unsigned int max, unsigned int flags,
                          gmk_func_ptr func);

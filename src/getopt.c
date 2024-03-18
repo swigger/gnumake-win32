@@ -202,7 +202,7 @@ static char *posixly_correct;
    whose names are inconsistent.  */
 
 #ifndef getenv
-extern char *getenv ();
+// extern char *getenv ();
 #endif
 
 static char *

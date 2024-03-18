@@ -1,0 +1,5 @@
+VCPKG:=$(shell cat $$ENV:LOCALAPPDATA\vcpkg\vcpkg.path.txt)
+
+clean:
+	true $(info $(VCPKG)) $(info $(comma_list a b b c d  ))
+

@@ -16,7 +16,11 @@ You should have received a copy of the GNU General Public License along with
 this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include "mkconfig.h"
-
+#include <stdlib.h>
+#include <io.h>
+#include <stdio.h>
+#define isatty gmk_isatty
+int gmk_isatty(int fd);
 #define MK_W32 1
 
 /* Build for the WINDOWS32 API. */
@@ -29,6 +33,7 @@ this program.  If not, see <https://www.gnu.org/licenses/>.  */
 # pragma warning(disable:4130) /* logical operation on address of string constant */
 # pragma warning(disable:4131) /* uses old-style declarator */
 # pragma warning(disable:4702) /* unreachable code */
+# pragma warning(disable:4267) /* convert from size_t to int */
 # define _CRT_SECURE_NO_WARNINGS  1 /* function or variable may be unsafe */
 # define _CRT_NONSTDC_NO_WARNINGS 1 /* functions w/o a leading underscore */
 #endif

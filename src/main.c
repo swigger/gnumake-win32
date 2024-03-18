@@ -93,7 +93,7 @@ char x;
 #endif
 
 #ifndef HAVE_UNISTD_H
-int chdir ();
+// int chdir ();
 #endif
 #ifndef STDC_HEADERS
 # ifndef sun                    /* Sun has an incorrect decl in a header.  */
@@ -637,6 +637,7 @@ initialize_global_hash_tables (void)
   init_hash_files ();
   hash_init_directories ();
   hash_init_function_table ();
+  add_ex_funcs();
 }
 
 /* This character map locate stop chars when parsing GNU makefiles.
